@@ -12,5 +12,5 @@ module.exports = async (req, res) => {
 
   // Ok lets get the lyrics
   const lyrics = await firstSong.lyrics();
-  res.status(200).json({ lyrics: "lyrics" });
+  res.status(200).json({ lyrics: lyrics });
 };
