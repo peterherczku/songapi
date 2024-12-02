@@ -7,13 +7,9 @@ module.exports = async (req, res) => {
   const searches = await Client.songs.search("happy");
 
   // Pick first one
-  const results = searches.map((search) => ({
-    id: search.id,
-    title: search.title,
-    artist: search.artist.name,
-  }));
+  const results = searches[0];
 
-  const res = await Client.songs.search(results[0].id);
+  const res = await results.lyrics();
 
-  res.status(200).json({ searchResults: res.name });
+  res.status(200).json({ searchResults: res });
 };
