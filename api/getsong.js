@@ -12,7 +12,8 @@ module.exports = async (req, res) => {
       .json({ error: "The id parameter must be a valid number." });
   }
   const numericId = parseInt(id, 10);
-  const lyrics = await Client.songs.get(numericId);
+  const song = await Client.songs.get(numericId);
+  const lyrics = await song.lyrics();
 
   res.status(200).json({ lyrics: lyrics });
 };
