@@ -7,11 +7,11 @@ module.exports = async (req, res) => {
   const searches = await Client.songs.search("happy");
 
   // Pick first one
-  const firstSong = searches[0];
+  const results = searches.map((search) => ({
+    id: search.id,
+    title: search.title,
+    artist: search.artist.name,
+  }));
 
-  console.log("About the Song:\n", firstSong, "\n");
-
-  // Ok lets get the lyrics
-  const lyrics = await firstSong.lyrics();
-  res.status(200).json({ searchResults: JSON.parse(JSON.stringify(searches)) });
+  res.status(200).json({ searchResults: results });
 };
