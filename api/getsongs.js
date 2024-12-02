@@ -17,5 +17,8 @@ module.exports = async (req, res) => {
     artist: search.artist.name,
   }));
 
-  res.status(200).json({ searchResults: results });
+  res
+    .status(200)
+    .setHeader("Access-Control-Allow-Origin", "*")
+    .json({ searchResults: results });
 };
