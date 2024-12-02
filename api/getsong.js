@@ -6,10 +6,13 @@ const Client = new Genius.Client(
 module.exports = async (req, res) => {
   const { id } = req.query;
 
-  if (!id) {
-    return res.status(400).json({ error: "Missing song ID" });
+  if (!id || isNaN(id)) {
+    return res
+      .status(400)
+      .json({ error: "The id parameter must be a valid number." });
   }
-  const lyrics = await Client.songs.get(id);
+  const numericId = parseInt(id, 10);
+  const lyrics = await Client.songs.get(numericId);
 
   res.status(200).json({ lyrics: lyrics });
 };
