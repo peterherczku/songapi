@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
   // Pick first one
   const results = searches[0];
 
-  const res = await results.lyrics();
+  const lyrics = await results.lyrics();
 
-  res.status(200).json({ searchResults: res });
+  res.status(200).json({ searchResults: lyrics });
 };
