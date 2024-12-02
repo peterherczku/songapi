@@ -13,5 +13,7 @@ module.exports = async (req, res) => {
     artist: search.artist.name,
   }));
 
-  res.status(200).json({ searchResults: results });
+  const res = await Client.songs.search(results[0].id);
+
+  res.status(200).json({ searchResults: res.name });
 };
