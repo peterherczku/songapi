@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
   if (!id) {
     return res.status(400).json({ error: "Missing song ID" });
   }
-  const lyrics = await Client.songs.get(results[0].id);
+  const lyrics = await Client.songs.get(id);
 
   res.status(200).json({ lyrics: lyrics });
 };
