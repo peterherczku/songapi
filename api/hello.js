@@ -1,5 +1,7 @@
 const Genius = require("genius-lyrics");
-const Client = new Genius.Client("top-secret-optional-key");
+const Client = new Genius.Client(
+  "RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
+);
 
 module.exports = async (req, res) => {
   const searches = await Client.songs.search("faded");
