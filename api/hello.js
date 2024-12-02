@@ -8,9 +8,10 @@ module.exports = async (req, res) => {
 
   // Pick first one
   const firstSong = searches[0];
+
   console.log("About the Song:\n", firstSong, "\n");
 
   // Ok lets get the lyrics
   const lyrics = await firstSong.lyrics();
-  res.status(200).json({ searchResults: searches });
+  res.status(200).json({ searchResults: JSON.parse(JSON.stringify(searches)) });
 };
