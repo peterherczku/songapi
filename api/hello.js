@@ -4,7 +4,7 @@ const Client = new Genius.Client(
 );
 
 module.exports = async (req, res) => {
-  const searches = await Client.songs.search("faded");
+  const searches = await Client.songs.search("happy");
 
   // Pick first one
   const firstSong = searches[0];
