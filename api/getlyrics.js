@@ -16,7 +16,10 @@ module.exports = async (req, res) => {
 	const cached = await redis.get(id);
 	if (cached) {
 		console.log("Cache hit");
-		return cached;
+		return res
+			.status(200)
+			.setHeader("Access-Control-Allow-Origin", "*")
+			.json({ artist: song.artist.name, title: song.title, lyrics: cached });
 	}
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
