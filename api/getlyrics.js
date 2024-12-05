@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
 			.json({ error: "The id parameter must be a valid number." });
 	}
 	if (cache[id]) {
+		console.log("Cache hit");
 		return cache[id];
 	}
 	const numericId = parseInt(id, 10);
