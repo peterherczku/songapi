@@ -19,12 +19,16 @@ module.exports = async (req, res) => {
 		return res
 			.status(200)
 			.setHeader("Access-Control-Allow-Origin", "*")
-			.json({ artist: song.artist.name, title: song.title, lyrics: cached });
+			.json(cached);
 	}
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
-	redis.set(id, lyrics);
+	redis.set(id, {
+		artist: song.artist.name,
+		title: song.title,
+		lyrics: lyrics,
+	});
 	res
 		.status(200)
 		.setHeader("Access-Control-Allow-Origin", "*")
