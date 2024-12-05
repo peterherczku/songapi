@@ -7,6 +7,7 @@ import { createClient } from "redis";
 module.exports = async (req, res) => {
 	const { id } = req.query;
 	const client = createClient();
+	await client.connect();
 
 	if (!id || isNaN(id)) {
 		return res
