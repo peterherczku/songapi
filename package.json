@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@vercel/edge-config": "^1.4.0",
     "genius-lyrics": "^4.4.7"
   }
 }

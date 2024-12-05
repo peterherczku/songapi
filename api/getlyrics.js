@@ -2,6 +2,7 @@ const Genius = require("genius-lyrics");
 const Client = new Genius.Client(
 	"RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
 );
+import { get, set } from "@vercel/edge-config";
 
 const cache = {};
 
@@ -13,14 +14,15 @@ module.exports = async (req, res) => {
 			.status(400)
 			.json({ error: "The id parameter must be a valid number." });
 	}
-	if (cache[id]) {
+	const cached = await get(id);
+	if (cached) {
 		console.log("Cache hit");
-		return cache[id];
+		return cached;
 	}
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
-	cache[id] = lyrics;
+	set(id, lyrics);
 	res
 		.status(200)
 		.setHeader("Access-Control-Allow-Origin", "*")
