@@ -25,12 +25,14 @@ module.exports = async (req, res) => {
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
 	redis.set(id, {
+		id: id,
 		artist: song.artist.name,
 		title: song.title,
 		lyrics: lyrics,
 		thumbnail: song.thumbnail,
 	});
 	res.status(200).setHeader("Access-Control-Allow-Origin", "*").json({
+		id: id,
 		artist: song.artist.name,
 		title: song.title,
 		lyrics: lyrics,
