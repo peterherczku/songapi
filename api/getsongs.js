@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
 		id: search.id,
 		title: search.title,
 		artist: search.artist.name,
+		thumbnail: search.thumbnail,
 	}));
 
 	res

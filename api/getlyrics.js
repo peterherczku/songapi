@@ -28,9 +28,12 @@ module.exports = async (req, res) => {
 		artist: song.artist.name,
 		title: song.title,
 		lyrics: lyrics,
+		thumbnail: song.thumbnail,
 	});
-	res
-		.status(200)
-		.setHeader("Access-Control-Allow-Origin", "*")
-		.json({ artist: song.artist.name, title: song.title, lyrics: lyrics });
+	res.status(200).setHeader("Access-Control-Allow-Origin", "*").json({
+		artist: song.artist.name,
+		title: song.title,
+		lyrics: lyrics,
+		thumbnail: song.thumbnail,
+	});
 };
