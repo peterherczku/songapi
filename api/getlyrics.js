@@ -27,6 +27,7 @@ module.exports = async (req, res) => {
 	redis.set(id, {
 		id: id,
 		artist: song.artist.name,
+		artist_image: song.artist.image,
 		title: song.title,
 		lyrics: lyrics,
 		thumbnail: song.thumbnail,
@@ -34,6 +35,7 @@ module.exports = async (req, res) => {
 	res.status(200).setHeader("Access-Control-Allow-Origin", "*").json({
 		id: id,
 		artist: song.artist.name,
+		artist_image: song.artist.image,
 		title: song.title,
 		lyrics: lyrics,
 		thumbnail: song.thumbnail,
