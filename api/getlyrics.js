@@ -26,18 +26,28 @@ module.exports = async (req, res) => {
 	const lyrics = await song.lyrics();
 	redis.set(id, {
 		id: id,
-		artist: song.artist.name,
+		artist: {
+			id: song.artist.id,
+			name: song.artist.name,
+			image: song.artist.image,
+		},
 		artist_image: song.artist.image,
 		title: song.title,
 		lyrics: lyrics,
 		thumbnail: song.thumbnail,
 	});
-	res.status(200).setHeader("Access-Control-Allow-Origin", "*").json({
-		id: id,
-		artist: song.artist.name,
-		artist_image: song.artist.image,
-		title: song.title,
-		lyrics: lyrics,
-		thumbnail: song.thumbnail,
-	});
+	res
+		.status(200)
+		.setHeader("Access-Control-Allow-Origin", "*")
+		.json({
+			id: id,
+			artist: {
+				id: song.artist.id,
+				name: song.artist.name,
+				image: song.artist.image,
+			},
+			title: song.title,
+			lyrics: lyrics,
+			thumbnail: song.thumbnail,
+		});
 };
