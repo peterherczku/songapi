@@ -22,7 +22,7 @@ async function getAccessToken(redis) {
 	});
 
 	const data = await response.json();
-	redis.set("spotify_token", data.access_token, "EX", data.expires_in);
+	redis.set("spotify_token", data.access_token, { ex: data.expires_in });
 	return data.access_token;
 }
 
