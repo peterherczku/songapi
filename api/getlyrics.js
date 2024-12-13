@@ -4,7 +4,9 @@ const Client = new Genius.Client(
 );
 import { Redis } from "@upstash/redis";
 
-async function getAccessToken() {
+async function getAccessToken(redis) {
+	if (redis.exists("spotify_token")) return redis.get("spotify_token");
+
 	const response = await fetch("https://accounts.spotify.com/api/token", {
 		method: "POST",
 		headers: {
@@ -16,6 +18,7 @@ async function getAccessToken() {
 	});
 
 	const data = await response.json();
+	redis.set("spotify_token", data.access_token, "EX", data.expires_in);
 	return data.access_token;
 }
 
@@ -40,7 +43,6 @@ module.exports = async (req, res) => {
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
 	const token = await getAccessToken();
-	console.log(token);
 	const spotifyCall = await fetch(
 		`https://api.spotify.com/v1/search?q=track%3A${encodeURIComponent(
 			song.title
@@ -55,11 +57,11 @@ module.exports = async (req, res) => {
 		}
 	);
 	const data = await spotifyCall.json();
-	console.log(data);
-	const spotifyEmbed =
+	const trackId =
 		Array.isArray(data.tracks?.items) && data.tracks.items.length > 0
 			? data.tracks.items[0].id
 			: "";
+	const spotifyEmbed = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator`;
 	redis.set(id, {
 		id: id,
 		artist: {
