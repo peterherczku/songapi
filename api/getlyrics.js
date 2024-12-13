@@ -4,12 +4,11 @@ const Client = new Genius.Client(
 );
 import { Redis } from "@upstash/redis";
 
-async function getAccessToken() {
-	const redis = Redis.fromEnv();
-
-	if (await redis.exists("spotify_token")) {
+async function getAccessToken(redis) {
+	const cached = await redis.get("spotify_token");
+	if (cached) {
 		console.log("Using cached token");
-		return await redis.get("spotify_token");
+		return cached;
 	}
 
 	const response = await fetch("https://accounts.spotify.com/api/token", {
