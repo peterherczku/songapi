@@ -24,6 +24,15 @@ module.exports = async (req, res) => {
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
+	const spotifyCall = await fetch(
+		`https://api.spotify.com/v1/search?q=track%3A${encodeURIComponent(
+			song.title
+		)}%2520artist%3A${encodeURIComponent(
+			song.artist.name
+		)}&type=track&limit=1&offset=0`
+	);
+	const data = await spotifyCall.json();
+	const spotifyEmbed = data.items[0]?.id ?? "";
 	redis.set(id, {
 		id: id,
 		artist: {
@@ -31,6 +40,7 @@ module.exports = async (req, res) => {
 			name: song.artist.name,
 			image: song.artist.image,
 		},
+		spotifyEmbed: spotifyEmbed,
 		artist_image: song.artist.image,
 		title: song.title,
 		lyrics: lyrics,
@@ -46,6 +56,8 @@ module.exports = async (req, res) => {
 				name: song.artist.name,
 				image: song.artist.image,
 			},
+
+			spotifyEmbed: spotifyEmbed,
 			title: song.title,
 			lyrics: lyrics,
 			thumbnail: song.thumbnail,
