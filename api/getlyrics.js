@@ -29,7 +29,13 @@ module.exports = async (req, res) => {
 			song.title
 		)}%2520artist%3A${encodeURIComponent(
 			song.artist.name
-		)}&type=track&limit=1&offset=0`
+		)}&type=track&limit=1&offset=0`,
+		{
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${process.env.SPOTIFY_TOKEN}`,
+			},
+		}
 	);
 	const data = await spotifyCall.json();
 	const spotifyEmbed = data.items[0]?.id ?? "";
