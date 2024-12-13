@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
 	const lyrics = await song.lyrics();
-	const token = await getAccessToken();
+	const token = await getAccessToken(redis);
 	const spotifyCall = await fetch(
 		`https://api.spotify.com/v1/search?q=track%3A${encodeURIComponent(
 			song.title
