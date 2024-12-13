@@ -5,25 +5,18 @@ const Client = new Genius.Client(
 import { Redis } from "@upstash/redis";
 
 async function getAccessToken() {
-	console.log(
-		new Buffer.from(
-			process.env.SPOTIFY_CLIENT_ID + ":" + process.env.SPOTIFY_CLIENT_SECRET
-		).toString("base64")
-	);
-	const data = await fetch("https://accounts.spotify.com/api/token", {
+	const response = await fetch("https://accounts.spotify.com/api/token", {
 		method: "POST",
 		headers: {
 			Authorization:
-				"Basic " +
-				new Buffer.from(
-					process.env.SPOTIFY_CLIENT_ID +
-						":" +
-						process.env.SPOTIFY_CLIENT_SECRET
-				).toString("base64"),
+				"Basic NzBiMTFjY2Y2MTE3NGYwYWIzMmM1Y2M0YTM1ZTg5MWU6NjI4Y2ZjYWZjZTg1NGMyY2JmY2UxZjJlMDEwOGQ2YWQ=",
+			"Content-Type": "application/x-www-form-urlencoded",
 		},
 		body: "grant_type=client_credentials",
 	});
-	return (await data.json()).access_token;
+
+	const data = await response.json();
+	return data.access_token;
 }
 
 module.exports = async (req, res) => {
