@@ -38,7 +38,11 @@ module.exports = async (req, res) => {
 		}
 	);
 	const data = await spotifyCall.json();
-	const spotifyEmbed = data.items[0]?.id ?? "";
+	console.log(data);
+	const spotifyEmbed =
+		Array.isArray(data.tracks?.items) && data.tracks.items.length > 0
+			? data.tracks.items[0].id
+			: "";
 	redis.set(id, {
 		id: id,
 		artist: {
