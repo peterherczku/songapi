@@ -7,8 +7,7 @@ const { HttpProxyAgent } = require("http-proxy-agent");
 import { Redis } from "@upstash/redis";
 import { head } from "@vercel/blob";
 import { ProxyAgent } from "undici";
-const proxy =
-	"rp.proxyscrape.com:6060:wdfrz8dai7gp7y7-country-hu:3dlj6wx8p73fwj9";
+const proxy = process.env.PROXY_URL;
 
 const proxyHost = proxy.split(":")[0];
 const proxyPort = proxy.split(":")[1];
