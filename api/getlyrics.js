@@ -20,6 +20,7 @@ async function fetchLyrics(url) {
 		agent: proxyAgent,
 	});
 	const text = await res.text();
+	console.log(text);
 	const document = html(text);
 	const lyricsRoot = document.getElementById("lyrics-root");
 
@@ -33,8 +34,6 @@ async function fetchLyrics(url) {
 		})
 		.join("\n")
 		.trim();
-
-	console.log(lyricsRoot.innerHTML);
 
 	return lyrics;
 }
