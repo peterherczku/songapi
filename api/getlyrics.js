@@ -1,9 +1,8 @@
-import html from "node-html-parser";
+import { html } from "node-html-parser";
 const Genius = require("genius-lyrics");
 const Client = new Genius.Client(
 	"RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
 );
-import { Redis } from "@upstash/redis";
 const { HttpProxyAgent } = require("http-proxy-agent");
 const proxy = process.env.PROXY_URL;
 const proxyHost = proxy.split(":")[0];
@@ -16,26 +15,36 @@ const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
 const proxyAgent = new HttpProxyAgent(proxyUrl);
 
 async function fetchLyrics(url) {
-	const res = await fetch(url, {
-		agent: proxyAgent,
-	});
-	const text = await res.text();
-	console.log(url);
-	const document = html(text);
-	const lyricsRoot = document.getElementById("lyrics-root");
+	try {
+		const res = await fetch(url, {
+			agent: proxyAgent,
+		});
+		const text = await res.text();
 
-	const lyrics = lyricsRoot
-		?.querySelectorAll("[data-lyrics-container='true']")
-		.map((x) => {
-			x.querySelectorAll("br").forEach((y) => {
-				y.replaceWith(new html.TextNode("\n"));
-			});
-			return x.text;
-		})
-		.join("\n")
-		.trim();
+		// Parse HTML text
+		const document = parse(text);
 
-	return lyrics;
+		// Find the lyrics root element (use querySelector for single element)
+		const lyricsRoot = document.querySelector("#lyrics-root");
+
+		if (!lyricsRoot) {
+			console.error("Could not find #lyrics-root in the document");
+			return null;
+		}
+
+		// Replace <br> tags with newline characters
+		lyricsRoot.querySelectorAll("br").forEach((y) => {
+			y.replaceWith(new TextNode("\n"));
+		});
+
+		// Extract and clean the text
+		const lyrics = lyricsRoot.text.trim();
+
+		return lyrics;
+	} catch (error) {
+		console.error("Error fetching lyrics:", error);
+		return null;
+	}
 }
 
 async function getAccessToken(redis) {
