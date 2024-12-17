@@ -22,7 +22,6 @@ async function fetchLyrics(url) {
 	try {
 		const res = await fetch(url, {
 			dispatcher,
-			headers,
 		});
 		const text = await res.text();
 
