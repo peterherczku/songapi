@@ -38,7 +38,6 @@ async function fetchLyrics(url) {
 	};
 
 	console.log(proxyUrl);
-	console.log(proxyAgent);
 	try {
 		const res = await fetch(url, {
 			dispatcher,
