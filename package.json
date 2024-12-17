@@ -16,6 +16,7 @@
     "genius-lyrics": "^4.4.7",
     "http-proxy-agent": "^7.0.2",
     "node-html-parser": "^6.1.13",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "undici": "^7.1.1"
   }
 }

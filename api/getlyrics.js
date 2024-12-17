@@ -6,6 +6,7 @@ const Client = new Genius.Client(
 const { HttpProxyAgent } = require("http-proxy-agent");
 import { Redis } from "@upstash/redis";
 import { head } from "@vercel/blob";
+import { ProxyAgent } from "undici";
 const proxy =
 	"rp.proxyscrape.com:6060:wdfrz8dai7gp7y7-country-hu:3dlj6wx8p73fwj9";
 
@@ -16,11 +17,11 @@ const proxyPass = proxy.split(":")[3];
 
 // Construct the proxy URL
 const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
-const proxyAgent = new HttpProxyAgent(proxyUrl);
+const dispatcher = new ProxyAgent(proxyUrl);
 
 async function tryProxy() {
 	const res = await fetch("https://ipinfo.io/json", {
-		agent: proxyAgent,
+		dispatcher,
 	});
 	console.log(await res.json());
 }
@@ -35,13 +36,12 @@ async function fetchLyrics(url) {
 		Connection: "keep-alive",
 		Referer: "https://genius.com/", // Add a referer to mimic real navigation
 	};
-	url = "https://genius.com/Lady-gaga-and-bruno-mars-die-with-a-smile-lyrics";
 
 	console.log(proxyUrl);
 	console.log(proxyAgent);
 	try {
 		const res = await fetch(url, {
-			agent: proxyAgent,
+			dispatcher,
 			headers: headers,
 		});
 		const text = await res.text();
