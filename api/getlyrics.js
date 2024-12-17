@@ -16,6 +16,8 @@ const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
 const proxyAgent = new HttpProxyAgent(proxyUrl);
 
 async function fetchLyrics(url) {
+	console.log(proxyUrl);
+	console.log(proxyAgent);
 	try {
 		const res = await fetch(url, {
 			agent: proxyAgent,
