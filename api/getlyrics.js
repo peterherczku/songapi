@@ -6,7 +6,9 @@ const Client = new Genius.Client(
 const { HttpProxyAgent } = require("http-proxy-agent");
 import { Redis } from "@upstash/redis";
 import { head } from "@vercel/blob";
-const proxy = process.env.PROXY_URL;
+const proxy =
+	"rp.proxyscrape.com:6060:wdfrz8dai7gp7y7-country-hu:3dlj6wx8p73fwj9";
+
 const proxyHost = proxy.split(":")[0];
 const proxyPort = proxy.split(":")[1];
 const proxyUser = proxy.split(":")[2];
