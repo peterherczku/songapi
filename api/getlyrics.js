@@ -34,6 +34,8 @@ async function fetchLyrics(url) {
 		.join("\n")
 		.trim();
 
+	console.log(lyricsRoot.innerHTML);
+
 	return lyrics;
 }
 
