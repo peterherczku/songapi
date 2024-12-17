@@ -18,51 +18,31 @@ const proxyPass = proxy.split(":")[3];
 const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
 const dispatcher = new ProxyAgent(proxyUrl);
 
-async function tryProxy() {
-	const res = await fetch("https://ipinfo.io/json", {
-		dispatcher,
-	});
-	console.log(await res.json());
-}
-
 async function fetchLyrics(url) {
-	const headers = {
-		"User-Agent":
-			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-		Accept:
-			"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-		"Accept-Language": "en-US,en;q=0.5",
-		Connection: "keep-alive",
-		Referer: "https://genius.com/", // Add a referer to mimic real navigation
-	};
-
-	console.log(proxyUrl);
 	try {
 		const res = await fetch(url, {
 			dispatcher,
-			headers: headers,
+			headers,
 		});
 		const text = await res.text();
-		await tryProxy();
 
 		// Parse HTML text
 		const document = parse(text);
 		console.log(document.querySelector("title").innerHTML);
+
 		// Find the lyrics root element (use querySelector for single element)
-		const lyricsRoot = document.querySelector("#lyrics-root");
+		const lyricsRoot = document.getElementById("lyrics-root");
 
-		if (!lyricsRoot) {
-			console.error("Could not find #lyrics-root in the document");
-			return null;
-		}
-
-		// Replace <br> tags with newline characters
-		lyricsRoot.querySelectorAll("br").forEach((y) => {
-			y.replaceWith(new TextNode("\n"));
-		});
-
-		// Extract and clean the text
-		const lyrics = lyricsRoot.text.trim();
+		const lyrics = lyricsRoot
+			?.querySelectorAll("[data-lyrics-container='true']")
+			.map((x) => {
+				x.querySelectorAll("br").forEach((y) => {
+					y.replaceWith(new TextNode("\n"));
+				});
+				return x.text;
+			})
+			.join("\n")
+			.trim();
 
 		return lyrics;
 	} catch (error) {
@@ -74,7 +54,6 @@ async function fetchLyrics(url) {
 async function getAccessToken(redis) {
 	const cached = await redis.get("spotify_token");
 	if (cached) {
-		console.log("Using cached token");
 		return cached;
 	}
 
