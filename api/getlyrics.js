@@ -1,8 +1,33 @@
+import html from "node-html-parser";
 const Genius = require("genius-lyrics");
 const Client = new Genius.Client(
 	"RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
 );
 import { Redis } from "@upstash/redis";
+const { HttpProxyAgent } = require("http-proxy-agent");
+const proxyAgent = new HttpProxyAgent(process.env.PROXY_URL);
+
+async function fetchLyrics(url) {
+	const res = await fetch(url, {
+		agent: proxyAgent,
+	});
+	const text = await res.text();
+	const document = html(text);
+	const lyricsRoot = document.getElementById("lyrics-root");
+
+	const lyrics = lyricsRoot
+		?.querySelectorAll("[data-lyrics-container='true']")
+		.map((x) => {
+			x.querySelectorAll("br").forEach((y) => {
+				y.replaceWith(new html.TextNode("\n"));
+			});
+			return x.text;
+		})
+		.join("\n")
+		.trim();
+
+	return lyrics;
+}
 
 async function getAccessToken(redis) {
 	const cached = await redis.get("spotify_token");
@@ -45,7 +70,7 @@ module.exports = async (req, res) => {
 	}
 	const numericId = parseInt(id, 10);
 	const song = await Client.songs.get(numericId);
-	const lyrics = await song.lyrics();
+	const lyrics = await fetchLyrics(song.url);
 	const token = await getAccessToken(redis);
 	const spotifyCall = await fetch(
 		`https://api.spotify.com/v1/search?q=track%3A${encodeURIComponent(
