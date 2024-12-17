@@ -18,6 +18,13 @@ const proxyPass = proxy.split(":")[3];
 const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
 const proxyAgent = new HttpProxyAgent(proxyUrl);
 
+async function tryProxy() {
+	const res = await fetch("https://ipinfo.io/json", {
+		agent: proxyAgent,
+	});
+	console.log(await res.json());
+}
+
 async function fetchLyrics(url) {
 	const headers = {
 		"User-Agent":
@@ -38,6 +45,7 @@ async function fetchLyrics(url) {
 			headers: headers,
 		});
 		const text = await res.text();
+		await tryProxy();
 
 		// Parse HTML text
 		const document = parse(text);
