@@ -1,9 +1,10 @@
-import { html } from "node-html-parser";
+import { html, TextNode } from "node-html-parser";
 const Genius = require("genius-lyrics");
 const Client = new Genius.Client(
 	"RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
 );
 const { HttpProxyAgent } = require("http-proxy-agent");
+import { Redis } from "@upstash/redis";
 const proxy = process.env.PROXY_URL;
 const proxyHost = proxy.split(":")[0];
 const proxyPort = proxy.split(":")[1];
