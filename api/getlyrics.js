@@ -27,7 +27,6 @@ async function fetchLyrics(url) {
 
 		// Parse HTML text
 		const document = parse(text);
-		console.log(document.querySelector("title").innerHTML);
 
 		// Find the lyrics root element (use querySelector for single element)
 		const lyricsRoot = document.getElementById("lyrics-root");
