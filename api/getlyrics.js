@@ -16,6 +16,8 @@ const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
 const proxyAgent = new HttpProxyAgent(proxyUrl);
 
 async function fetchLyrics(url) {
+	url = "https://genius.com/Lady-gaga-and-bruno-mars-die-with-a-smile-lyrics";
+
 	console.log(proxyUrl);
 	console.log(proxyAgent);
 	try {
