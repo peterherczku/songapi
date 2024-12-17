@@ -20,7 +20,7 @@ async function fetchLyrics(url) {
 		agent: proxyAgent,
 	});
 	const text = await res.text();
-	console.log(text);
+	console.log(url);
 	const document = html(text);
 	const lyricsRoot = document.getElementById("lyrics-root");
 
