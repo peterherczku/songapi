@@ -1,4 +1,4 @@
-import { html, TextNode } from "node-html-parser";
+import parse, { TextNode } from "node-html-parser";
 const Genius = require("genius-lyrics");
 const Client = new Genius.Client(
 	"RhhiJZGKjlALygOmujteGUe8iW8e6gnAgS3Sm96wzvWWmFtPOogXTmwSMhQTMYWS"
