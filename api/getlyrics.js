@@ -5,7 +5,15 @@ const Client = new Genius.Client(
 );
 import { Redis } from "@upstash/redis";
 const { HttpProxyAgent } = require("http-proxy-agent");
-const proxyAgent = new HttpProxyAgent(process.env.PROXY_URL);
+const proxy = process.env.PROXY_URL;
+const proxyHost = proxy.split(":")[0];
+const proxyPort = proxy.split(":")[1];
+const proxyUser = proxy.split(":")[2];
+const proxyPass = proxy.split(":")[3];
+
+// Construct the proxy URL
+const proxyUrl = `http://${proxyUser}:${proxyPass}@${proxyHost}:${proxyPort}`;
+const proxyAgent = new HttpProxyAgent(proxyUrl);
 
 async function fetchLyrics(url) {
 	const res = await fetch(url, {
